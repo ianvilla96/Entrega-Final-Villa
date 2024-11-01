@@ -111,6 +111,25 @@ La base de datos relacional `TurismoDB` optimiza la gestión turística al centr
   - `relationship` (VARCHAR(50), NOT NULL): Tipo de relación (p. ej., padre, madre, etc.).
 
 ## Ejemplos de Consultas
-1. **Listar todas las ciudades**:
-   ```sql
-   SELECT * FROM Cities;
+
+```sql
+-- 1. Listar todas las ciudades
+SELECT * FROM Cities;
+
+-- 2. Listar todos los hoteles con sus ciudades y cantidad de estrellas
+SELECT Hotels.hotel_name, Cities.city_name, Hotels.stars
+FROM Hotels
+INNER JOIN Cities ON Hotels.id_city = Cities.id_city;
+
+-- 3. Listar todos los restaurantes junto con el tipo de comida que ofrecen
+SELECT Restaurants.restaurant_name, Cities.city_name, Ref_Types_of_Food.food_type_name
+FROM Restaurants
+INNER JOIN Cities ON Restaurants.id_city = Cities.id_city
+INNER JOIN Restaurant_Types_of_Food ON Restaurants.id_restaurant = Restaurant_Types_of_Food.id_restaurant
+INNER JOIN Ref_Types_of_Food ON Restaurant_Types_of_Food.id_food_type = Ref_Types_of_Food.id_food_type;
+
+-- 4. Contar cuántos hoteles hay en una ciudad específica
+SELECT COUNT(Hotels.id_hotel) AS total_hotels
+FROM Hotels
+INNER JOIN Cities ON Hotels.id_city = Cities.id_city
+WHERE Cities.city_name = 'Buenos Aires';
