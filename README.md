@@ -16,7 +16,8 @@ El sistema abarca varias entidades fundamentales del sector turístico:
 - **Visitors_Comments (Comentarios de Visitantes)**: Registra los comentarios de visitantes sobre los lugares de interés turístico.
 
 ## Diagrama ER
-![Descripción de la imagen](ruta/imagen.png)  <!-- Actualizar con la ruta de la imagen al subirla -->
+![Diagrama ER](https://drive.google.com/uc?export=view&id=1TrxtA2m-1zMZmHG09HuXcZwe5OZOJLho)
+
 
 
 ## Problemática y Solución
