@@ -133,3 +133,99 @@ SELECT COUNT(Hotels.id_hotel) AS total_hotels
 FROM Hotels
 INNER JOIN Cities ON Hotels.id_city = Cities.id_city
 WHERE Cities.city_name = 'Buenos Aires';
+
+Vistas Implementadas
+
+1. vista_restaurantes_ciudades
+Esta vista combina información de los restaurantes con las ciudades correspondientes, permitiendo obtener una lista de restaurantes junto con el nombre de la ciudad a la que pertenecen.
+
+Propósito:
+Facilitar la consulta conjunta de los datos de restaurantes y ciudades.
+
+Código:
+
+CREATE VIEW vista_restaurantes_ciudades AS
+SELECT
+    r.id_restaurant,
+    r.restaurant_name,
+    c.city_name
+FROM
+    Restaurants r
+JOIN
+    Cities c ON r.id_city = c.id_city;
+Triggers Implementados
+
+1. after_update_restaurants
+Este trigger se activa automáticamente después de que un restaurante es actualizado. Registra los cambios en una tabla de auditoría para llevar un historial de modificaciones.
+
+Propósito:
+Monitorear las actualizaciones realizadas en la tabla Restaurants.
+
+Código:
+
+CREATE TRIGGER after_update_restaurants
+AFTER UPDATE ON Restaurants
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Log (table_name, operation, description, timestamp)
+    VALUES (
+        'Restaurants',
+        'UPDATE',
+        CONCAT('Updated restaurant: ', OLD.restaurant_name, ' to ', NEW.restaurant_name),
+        NOW()
+    );
+END;
+2. after_delete_restaurants
+Este trigger se activa automáticamente después de que un restaurante es eliminado. Registra este evento en la tabla de auditoría.
+
+Propósito:
+Llevar un registro de las eliminaciones realizadas en la tabla Restaurants.
+
+Código:
+
+CREATE TRIGGER after_delete_restaurants
+AFTER DELETE ON Restaurants
+FOR EACH ROW
+BEGIN
+    INSERT INTO Audit_Log (table_name, operation, description, timestamp)
+    VALUES (
+        'Restaurants',
+        'DELETE',
+        CONCAT('Deleted restaurant: ', OLD.restaurant_name),
+        NOW()
+    );
+END;
+Funciones Implementadas
+
+1. obtener_nombre_ciudad
+Esta función devuelve el nombre de una ciudad dado su identificador (id_city).
+
+Propósito:
+Simplificar la obtención del nombre de una ciudad en consultas o procedimientos.
+
+Código:
+
+CREATE FUNCTION obtener_nombre_ciudad(id INT) RETURNS VARCHAR(100)
+BEGIN
+    DECLARE nombre_ciudad VARCHAR(100);
+    SELECT city_name INTO nombre_ciudad FROM Cities WHERE id_city = id;
+    RETURN nombre_ciudad;
+END;
+Procedimientos Almacenados
+
+1. insertar_restaurante
+Este procedimiento permite insertar un nuevo restaurante en la base de datos, especificando su nombre y la ciudad correspondiente.
+
+Propósito:
+Automatizar la inserción de datos en la tabla Restaurants.
+
+Código:
+
+CREATE PROCEDURE insertar_restaurante(
+    IN nombre_restaurante VARCHAR(100),
+    IN id_ciudad INT
+)
+BEGIN
+    INSERT INTO Restaurants (restaurant_name, id_city)
+    VALUES (nombre_restaurante, id_ciudad);
+END;
